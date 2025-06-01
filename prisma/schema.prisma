@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  password  String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Clinics {
+  id           String         @id @default(uuid())
+  name         String
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  Appointments Appointments[]
+  Patients     Patients[]
+  Doctors      Doctors[]
+
+  @@map("clinics")
+}
+
+model Doctors {
+  id                      String         @id @default(uuid())
+  name                    String
+  avatarImgUrl            String         @map("avatar_img_url")
+  specialty               String
+  appointmentPriceInCents Int            @map("appointment_price_in_cents")
+  availableFromWeekDay    Int            @map("available_from_week_day")
+  availableToWeekDay      Int            @map("available_to_week_day")
+  availableFromTime       DateTime       @map("available_from_time")
+  clinicId                String         @map("clinic_id")
+  clinic                  Clinics        @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  createdAt               DateTime       @default(now()) @map("created_at")
+  updatedAt               DateTime       @updatedAt @map("updated_at")
+  Appointments            Appointments[]
+
+  @@map("doctors")
+}
+
+enum Gender {
+  male
+  female
+}
+
+model Patients {
+  id          String         @id @default(uuid())
+  name        String
+  email       String         @unique
+  phoneNumber String         @map("phone_number")
+  gender      Gender
+  clinicId    String         @map("clinic_id")
+  clinic      Clinics        @relation(fields: [clinicId], references: [id])
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @updatedAt @map("updated_at")
+  appointment Appointments[]
+
+  @@map("patients")
+}
+
+model Appointments {
+  id        String   @id @default(uuid())
+  date      DateTime
+  patientId String   @map("patient_id")
+  patient   Patients @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctorId  String   @map("doctor_id")
+  doctor    Doctors  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  clinicId  String   @map("clinic_id")
+  clinic    Clinics  @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("appointments")
+}
