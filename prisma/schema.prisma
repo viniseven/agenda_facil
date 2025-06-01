@@ -12,26 +12,41 @@ datasource db {
 }
 
 model Users {
-  id        String   @id @default(uuid())
-  name      String
-  email     String
-  password  String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id             String           @id @default(uuid())
+  name           String
+  email          String
+  password       String
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  UsersInClinics UsersInClinics[]
 
   @@map("users")
 }
 
 model Clinics {
-  id           String         @id @default(uuid())
-  name         String
-  createdAt    DateTime       @default(now()) @map("created_at")
-  updatedAt    DateTime       @updatedAt @map("updated_at")
-  Appointments Appointments[]
-  Patients     Patients[]
-  Doctors      Doctors[]
+  id             String           @id @default(uuid())
+  name           String
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+  Appointments   Appointments[]
+  Patients       Patients[]
+  Doctors        Doctors[]
+  UsersInClinics UsersInClinics[]
 
   @@map("clinics")
+}
+
+model UsersInClinics {
+  userId   String @map("user_id")
+  clinicId String @map("clinic_id")
+
+  user   Users   @relation(fields: [userId], references: [id])
+  clinic Clinics @relation(fields: [clinicId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@id([userId, clinicId])
 }
 
 model Doctors {
@@ -61,7 +76,7 @@ model Patients {
   id          String         @id @default(uuid())
   name        String
   email       String         @unique
-  phoneNumber String         @map("phone_number")
+  phoneNumber String         @unique @map("phone_number")
   gender      Gender
   clinicId    String         @map("clinic_id")
   clinic      Clinics        @relation(fields: [clinicId], references: [id])
