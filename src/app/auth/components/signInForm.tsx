@@ -1,3 +1,5 @@
+"use client";
+
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -77,7 +79,7 @@ const SignInForm = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button>Login</Button>
+            <Button className="w-full">Login</Button>
           </CardFooter>
         </form>
       </Form>
