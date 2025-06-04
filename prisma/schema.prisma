@@ -8,13 +8,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users {
+model User {
   id             String           @id @default(uuid())
   name           String
   email          String           @unique
   emailVerified  Boolean
   image          String?
-  password       String
   createdAt      DateTime         @default(now()) @map("created_at")
   updatedAt      DateTime         @updatedAt @map("updated_at")
   UsersInClinics UsersInClinics[]
@@ -43,7 +42,7 @@ model UsersInClinics {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   clinic    Clinics  @relation(fields: [clinicId], references: [id])
-  user      Users    @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@id([userId, clinicId])
 }
@@ -105,7 +104,7 @@ model Session {
   ipAddress String?
   userAgent String?
   userId    String
-  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("session")
 }
@@ -124,7 +123,7 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
-  user                  Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
