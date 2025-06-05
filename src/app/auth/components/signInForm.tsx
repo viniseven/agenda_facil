@@ -22,6 +22,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
+import { LoaderCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const signInSchema = z.object({
   email: z.string().trim().min(1).email({ message: "E-mail inválido" }),
@@ -29,6 +33,8 @@ const signInSchema = z.object({
 });
 
 const SignInForm = () => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -37,8 +43,22 @@ const SignInForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof signInSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof signInSchema>) {
+    await authClient.signIn.email(
+      {
+        email: values.email,
+        password: values.password,
+        rememberMe: true,
+      },
+      {
+        onSuccess: () => {
+          router.push("/home");
+        },
+        onError: () => {
+          toast.error("Email ou senha inválidos");
+        },
+      },
+    );
   }
 
   return (
@@ -79,7 +99,16 @@ const SignInForm = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button className="w-full">Login</Button>
+            <Button className="w-full" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? (
+                <>
+                  Entrando
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                </>
+              ) : (
+                "Entrar"
+              )}
+            </Button>
           </CardFooter>
         </form>
       </Form>
