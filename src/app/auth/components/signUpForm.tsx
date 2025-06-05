@@ -23,6 +23,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
+import { LoaderCircle } from "lucide-react";
 
 const signUpSchema = z
   .object({
@@ -55,8 +57,13 @@ const SignUpForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof signUpSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof signUpSchema>) {
+    await authClient.signUp.email({
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      callbackURL: "/home",
+    });
   }
 
   return (
@@ -133,8 +140,19 @@ const SignUpForm = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button className="w-full" type="submit">
-              Criar conta
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={form.formState.isSubmitted}
+            >
+              {form.formState.isSubmitting ? (
+                <>
+                  Criando conta
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                </>
+              ) : (
+                "Criar conta"
+              )}
             </Button>
           </CardFooter>
         </form>
