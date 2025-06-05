@@ -27,6 +27,8 @@ import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
 import { LoaderCircle } from "lucide-react";
 
+import { toast } from "sonner";
+
 const signUpSchema = z
   .object({
     name: z.string().trim().min(2, { message: "Nome é obrigatório" }).max(50),
@@ -70,6 +72,12 @@ const SignUpForm = () => {
       {
         onSuccess: () => {
           router.push("/home");
+        },
+        onError: (ctx) => {
+          if (ctx.error.status == 422) {
+            toast.error("Email já cadastrado");
+            return;
+          }
         },
       },
     );
@@ -152,7 +160,7 @@ const SignUpForm = () => {
             <Button
               className="w-full"
               type="submit"
-              disabled={form.formState.isSubmitted}
+              disabled={form.formState.isSubmitting}
             >
               {form.formState.isSubmitting ? (
                 <>
