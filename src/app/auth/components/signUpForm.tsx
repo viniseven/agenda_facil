@@ -23,26 +23,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
-const signUpSchema = z
-  .object({
-    name: z.string().trim().min(2, { message: "Nome é obrigatório" }).max(50),
-    email: z
-      .string()
-      .trim()
-      .min(1, { message: "E-mail é obrigatório" })
-      .email({ message: "E-mail inválido" }),
-    password: z
-      .string()
-      .trim()
-      .min(8, { message: "A senha deverá conter pelo menos 08 caracteres" }),
-    confirmPassword: z
-      .string()
-      .min(8, { message: "É necessário repetir a senha" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "As senhas não coincidem",
-  });
+const signUpSchema = z.object({
+  name: z.string().trim().min(2, { message: "Nome é obrigatório" }).max(50),
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: "E-mail é obrigatório" })
+    .email({ message: "E-mail inválido" }),
+  password: z
+    .string()
+    .trim()
+    .min(8, { message: "A senha deverá conter pelo menos 08 caracteres" }),
+  confirmPassword: z.string().trim().min(1, { message: "Repita a senha" }),
+});
 
 const SignUpForm = () => {
   const form = useForm<z.infer<typeof signUpSchema>>({
@@ -55,8 +50,20 @@ const SignUpForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof signUpSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof signUpSchema>) {
+    await authClient.signUp.email(
+      {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        callbackURL: "/home",
+      },
+      {
+        onError: (ctx) => {
+          alert(ctx.error.message);
+        },
+      },
+    );
   }
 
   return (
