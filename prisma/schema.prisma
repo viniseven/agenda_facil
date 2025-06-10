@@ -8,7 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Users {
   id             String           @id @default(uuid())
   name           String
   email          String           @unique
@@ -17,8 +17,8 @@ model User {
   createdAt      DateTime         @default(now()) @map("created_at")
   updatedAt      DateTime         @updatedAt @map("updated_at")
   UsersInClinics UsersInClinics[]
-  accounts       Account[]
-  sessions       Session[]
+  accounts       Accounts[]
+  sessions       Sessions[]
 
   @@map("users")
 }
@@ -42,7 +42,7 @@ model UsersInClinics {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   clinic    Clinics  @relation(fields: [clinicId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id])
 
   @@id([userId, clinicId])
 }
@@ -95,7 +95,7 @@ model Appointments {
   @@map("appointments")
 }
 
-model Session {
+model Sessions {
   id        String   @id
   expiresAt DateTime
   token     String   @unique
@@ -104,12 +104,12 @@ model Session {
   ipAddress String?
   userAgent String?
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("session")
 }
 
-model Account {
+model Accounts {
   id                    String    @id
   accountId             String
   providerId            String
@@ -123,12 +123,12 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                  Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
 
-model Verification {
+model Verifications {
   id         String    @id
   identifier String
   value      String
