@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { z } from "zod";
@@ -24,6 +25,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+<<<<<<< HEAD
+=======
+import { LoaderCircle } from "lucide-react";
+
+import { toast } from "sonner";
+>>>>>>> d4b64951d5159d338f337bcfd12b21ce97674502
 
 const signUpSchema = z.object({
   name: z.string().trim().min(2, { message: "Nome é obrigatório" }).max(50),
@@ -40,6 +47,8 @@ const signUpSchema = z.object({
 });
 
 const SignUpForm = () => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -56,11 +65,24 @@ const SignUpForm = () => {
         name: values.name,
         email: values.email,
         password: values.password,
+<<<<<<< HEAD
         callbackURL: "/home",
       },
       {
         onError: (ctx) => {
           alert(ctx.error.message);
+=======
+      },
+      {
+        onSuccess: () => {
+          router.push("/home");
+        },
+        onError: (ctx) => {
+          if (ctx.error.status == 422) {
+            toast.error("Email já cadastrado");
+            return;
+          }
+>>>>>>> d4b64951d5159d338f337bcfd12b21ce97674502
         },
       },
     );
@@ -140,8 +162,19 @@ const SignUpForm = () => {
             />
           </CardContent>
           <CardFooter>
-            <Button className="w-full" type="submit">
-              Criar conta
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? (
+                <>
+                  Criando conta
+                  <LoaderCircle className="h-4 w-4 animate-spin" />
+                </>
+              ) : (
+                "Criar conta"
+              )}
             </Button>
           </CardFooter>
         </form>
