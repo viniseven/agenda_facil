@@ -14,15 +14,15 @@ export const auth = betterAuth({
     schema,
   },
   user: {
-    modelName: "User",
+    modelName: "Users",
   },
   session: {
-    modelName: "Session",
+    modelName: "Sessions",
   },
   account: {
-    modelName: "Account",
+    modelName: "Accounts",
   },
   verification: {
-    modelName: "Verification",
+    modelName: "Verifications",
   },
 });
