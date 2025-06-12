@@ -1,13 +1,13 @@
-import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { auth } from "@/lib/auth";
 
-import SignUpForm from "./components/signUpForm";
 import SignInForm from "./components/signInForm";
+import SignUpForm from "./components/signUpForm";
 
-const AuthPage = async () => {
+const AuthenticationPage = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -34,4 +34,4 @@ const AuthPage = async () => {
   );
 };
 
-export default AuthPage;
+export default AuthenticationPage;
