@@ -1,5 +1,5 @@
 import { FlatCompat } from "@eslint/eslintrc";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
+import simpleImportSort, { languages } from "eslint-plugin-simple-import-sort";
 import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 
@@ -26,7 +26,8 @@ const eslintConfig = [
       "import/newline-after-import": "error",
       "import/no-duplicates": "error",
     },
-    parserOptions: {
+
+    languageOptions.parserOptions: {
       sourceType: "module",
       ecmaVersion: "latest",
     },
