@@ -27,7 +27,7 @@ const HomePage = async () => {
   });
 
   if (clinics.length == 0) {
-    redirect("/clinic-form");
+    redirect("/clinic_form");
   }
 
   return (
