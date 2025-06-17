@@ -40,9 +40,7 @@ const signUpSchema = z.object({
   confirmPassword: z.string().trim().min(1, { message: "Repita a senha" }),
 });
 
-const SignUpForm = () => {
-  const router = useRouter();
-
+export const SignUpForm = () => {
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -53,7 +51,7 @@ const SignUpForm = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof signUpSchema>) {
+  const handleRegisterSubmit = async (values: z.infer<typeof signUpSchema>) => {
     await authClient.signUp.email(
       {
         name: values.name,
@@ -67,12 +65,15 @@ const SignUpForm = () => {
         },
       },
     );
-  }
+  };
 
   return (
     <Card>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(handleRegisterSubmit)}
+          className="space-y-8"
+        >
           <CardHeader>
             <CardTitle>Criar conta</CardTitle>
             <CardDescription>Crie uma conta para continuar</CardDescription>
@@ -163,5 +164,3 @@ const SignUpForm = () => {
     </Card>
   );
 };
-
-export default SignUpForm;
