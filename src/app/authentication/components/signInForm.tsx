@@ -32,7 +32,7 @@ const signInSchema = z.object({
   password: z.string().trim().min(8),
 });
 
-const SignInForm = () => {
+export const SignInForm = () => {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -43,7 +43,7 @@ const SignInForm = () => {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof signInSchema>) {
+  const handleLoginSubmit = async (values: z.infer<typeof signInSchema>) => {
     await authClient.signIn.email(
       {
         email: values.email,
@@ -59,12 +59,15 @@ const SignInForm = () => {
         },
       },
     );
-  }
+  };
 
   return (
     <Card>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(handleLoginSubmit)}
+          className="space-y-8"
+        >
           <CardHeader>
             <CardTitle>Login</CardTitle>
             <CardDescription>Faça login para continuar</CardDescription>
@@ -91,7 +94,11 @@ const SignInForm = () => {
                 <FormItem>
                   <FormLabel>Senha</FormLabel>
                   <FormControl>
-                    <Input placeholder="Insira sua senha" {...field} />
+                    <Input
+                      placeholder="Insira sua senha"
+                      type="password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -115,5 +122,3 @@ const SignInForm = () => {
     </Card>
   );
 };
-
-export default SignInForm;
