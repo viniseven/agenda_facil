@@ -25,12 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
-<<<<<<< HEAD
-=======
 import { LoaderCircle } from "lucide-react";
-
-import { toast } from "sonner";
->>>>>>> d4b64951d5159d338f337bcfd12b21ce97674502
 
 const signUpSchema = z.object({
   name: z.string().trim().min(2, { message: "Nome é obrigatório" }).max(50),
@@ -65,24 +60,11 @@ const SignUpForm = () => {
         name: values.name,
         email: values.email,
         password: values.password,
-<<<<<<< HEAD
         callbackURL: "/home",
       },
       {
         onError: (ctx) => {
           alert(ctx.error.message);
-=======
-      },
-      {
-        onSuccess: () => {
-          router.push("/home");
-        },
-        onError: (ctx) => {
-          if (ctx.error.status == 422) {
-            toast.error("Email já cadastrado");
-            return;
-          }
->>>>>>> d4b64951d5159d338f337bcfd12b21ce97674502
         },
       },
     );
