@@ -9,6 +9,7 @@ import {
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -20,7 +21,6 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 
-// Menu items.
 const groupMenu = [
   {
     title: "Dashboard",
@@ -54,19 +54,24 @@ const groupOthers = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
-      <SidebarHeader className="flex">
+    <Sidebar className="border border-gray-100 px-4 py-6 font-semibold text-gray-500">
+      <SidebarHeader className="flex items-center border-b border-gray-100 pb-6">
         <Image src="/logo.svg" alt="Agenda fácil" width={138} height={27} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-gray-400">
+            Menu Principal
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {groupMenu.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                  <SidebarMenuButton
+                    asChild
+                    className="hover:bg-blue-50 hover:text-blue-500"
+                  >
+                    <Link href={item.url} className="py-5">
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -77,13 +82,18 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Outros</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-gray-400">
+            Outros
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {groupOthers.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <Link href={item.url}>
+                  <SidebarMenuButton
+                    asChild
+                    className="hover:bg-blue-50 hover:text-blue-500"
+                  >
+                    <Link href={item.url} className="py-5">
                       <item.icon />
                       <span>{item.title}</span>
                     </Link>
@@ -94,6 +104,9 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <span>Clínica Teste</span>
+      </SidebarFooter>
     </Sidebar>
   );
 }
