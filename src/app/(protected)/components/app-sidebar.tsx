@@ -1,9 +1,12 @@
+"use client";
+
 import {
   LayoutDashboard,
   CalendarDays,
   Stethoscope,
   Users,
   Wallet,
+  LogOutIcon,
 } from "lucide-react";
 
 import {
@@ -20,6 +23,15 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import Image from "next/image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const groupMenu = [
   {
@@ -53,8 +65,20 @@ const groupOthers = [
 ];
 
 export function AppSidebar() {
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/authentication");
+        },
+      },
+    });
+  };
+
   return (
-    <Sidebar className="border border-gray-100 px-4 py-6 font-semibold text-gray-500">
+    <Sidebar className="border-sidebar-primary-foreground border px-4 py-6 font-semibold text-gray-500">
       <SidebarHeader className="flex items-center border-b border-gray-100 pb-6">
         <Image src="/logo.svg" alt="Agenda fácil" width={138} height={27} />
       </SidebarHeader>
@@ -105,7 +129,19 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <span>Clínica Teste</span>
+        <SidebarMenuItem>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>Clinica</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={handleSignOut}>
+                <LogOutIcon />
+                Sair
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </SidebarMenuItem>
       </SidebarFooter>
     </Sidebar>
   );
