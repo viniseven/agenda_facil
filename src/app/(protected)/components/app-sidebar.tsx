@@ -29,9 +29,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import { Avatar } from "@radix-ui/react-avatar";
+import { AvatarFallback } from "@/components/ui/avatar";
 
 const groupMenu = [
   {
@@ -64,8 +66,9 @@ const groupOthers = [
   },
 ];
 
-export function AppSidebar() {
+const AppSidebar = () => {
   const router = useRouter();
+  const session = authClient.useSession();
 
   const handleSignOut = async () => {
     await authClient.signOut({
@@ -79,7 +82,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="border-sidebar-primary-foreground border px-4 py-6 font-semibold text-gray-500">
-      <SidebarHeader className="flex items-center border-b border-gray-100 pb-6">
+      <SidebarHeader className="flex items-center border-b pb-6">
         <Image src="/logo.svg" alt="Agenda fácil" width={138} height={27} />
       </SidebarHeader>
       <SidebarContent>
@@ -91,10 +94,7 @@ export function AppSidebar() {
             <SidebarMenu>
               {groupMenu.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    className="hover:bg-blue-50 hover:text-blue-500"
-                  >
+                  <SidebarMenuButton asChild className="hover:text-primary">
                     <Link href={item.url} className="py-5">
                       <item.icon />
                       <span>{item.title}</span>
@@ -106,17 +106,14 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-gray-400">
+          <SidebarGroupLabel className="text-muted-foreground">
             Outros
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {groupOthers.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    asChild
-                    className="hover:bg-blue-50 hover:text-blue-500"
-                  >
+                  <SidebarMenuButton asChild className="hover:text-primary">
                     <Link href={item.url} className="py-5">
                       <item.icon />
                       <span>{item.title}</span>
@@ -128,15 +125,28 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="list-none">
         <SidebarMenuItem>
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button>Clinica</Button>
+            <DropdownMenuTrigger
+              asChild
+              className="hover:bg-background cursor-pointer"
+            >
+              <SidebarMenuButton>
+                <Avatar>
+                  <AvatarFallback className="rounded-lg p-2">CV</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-foreground">
+                    {session.data?.user?.clinic.name}
+                  </p>
+                  <p className="text-xs">{session.data?.user.email}</p>
+                </div>
+              </SidebarMenuButton>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onClick={handleSignOut}>
-                <LogOutIcon />
+              <DropdownMenuItem className="cursor-pointer">
+                <LogOutIcon onClick={handleSignOut} />
                 Sair
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -145,4 +155,6 @@ export function AppSidebar() {
       </SidebarFooter>
     </Sidebar>
   );
-}
+};
+
+export default AppSidebar;
