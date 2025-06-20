@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar } from "@radix-ui/react-avatar";
 import { AvatarFallback } from "@/components/ui/avatar";
 
@@ -68,6 +68,7 @@ const groupOthers = [
 
 const AppSidebar = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const session = authClient.useSession();
 
   const handleSignOut = async () => {
@@ -94,7 +95,11 @@ const AppSidebar = () => {
             <SidebarMenu>
               {groupMenu.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="hover:text-primary">
+                  <SidebarMenuButton
+                    asChild
+                    className="hover:text-primary focus:bg-blue-600"
+                    isActive={pathname === item.url}
+                  >
                     <Link href={item.url} className="py-5">
                       <item.icon />
                       <span>{item.title}</span>
@@ -113,7 +118,11 @@ const AppSidebar = () => {
             <SidebarMenu>
               {groupOthers.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="hover:text-primary">
+                  <SidebarMenuButton
+                    asChild
+                    className="hover:text-primary"
+                    isActive={pathname == item.url}
+                  >
                     <Link href={item.url} className="py-5">
                       <item.icon />
                       <span>{item.title}</span>
