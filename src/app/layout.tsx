@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${manrope.className} antialiased`}>
+      <body className={`${manrope.className} bg-background antialiased`}>
         {children}
         <Toaster richColors theme="light" />
       </body>
