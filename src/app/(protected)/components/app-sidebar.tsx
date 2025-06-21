@@ -82,7 +82,7 @@ const AppSidebar = () => {
   };
 
   return (
-    <Sidebar className="border-sidebar-primary-foreground border px-4 py-6 font-semibold text-gray-500">
+    <Sidebar className="border-sidebar-border bg-sidebar border px-4 py-6 font-semibold text-gray-500">
       <SidebarHeader className="flex items-center border-b pb-6">
         <Image src="/logo.svg" alt="Agenda fácil" width={138} height={27} />
       </SidebarHeader>
