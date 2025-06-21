@@ -41,8 +41,8 @@ model UsersInClinics {
   clinicId  String   @map("clinic_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  clinic    Clinics  @relation(fields: [clinicId], references: [id], onDelete: Cascade)
   user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clinic    Clinics  @relation(fields: [clinicId], references: [id], onDelete: Cascade)
 
   @@id([userId, clinicId])
 }
@@ -56,6 +56,7 @@ model Doctors {
   availableFromWeekDay    Int            @map("available_from_week_day")
   availableToWeekDay      Int            @map("available_to_week_day")
   availableFromTime       DateTime       @map("available_from_time")
+  availableToTime         DateTime       @map("available_to_time")
   clinicId                String         @map("clinic_id")
   createdAt               DateTime       @default(now()) @map("created_at")
   updatedAt               DateTime       @updatedAt @map("updated_at")
