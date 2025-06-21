@@ -26,7 +26,7 @@ const HomePage = async () => {
     },
   });
 
-  if (clinics.length == 0) {
+  if (!session.user.clinic) {
     redirect("/clinic_form");
   }
 
@@ -37,7 +37,7 @@ const HomePage = async () => {
       <p>{session?.user?.name}</p>
       <p>
         {clinics.map((clinic) => (
-          <p>{clinic.clinic.name}</p>
+          <p key={clinic.clinicId}>{clinic.clinic.name}</p>
         ))}
       </p>
       <SignOutButton />

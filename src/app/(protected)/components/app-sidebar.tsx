@@ -1,14 +1,25 @@
 "use client";
 
+import { Avatar } from "@radix-ui/react-avatar";
 import {
-  LayoutDashboard,
   CalendarDays,
+  LayoutDashboard,
+  LogOutIcon,
   Stethoscope,
   Users,
   Wallet,
-  LogOutIcon,
 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
+import { AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Sidebar,
   SidebarContent,
@@ -21,19 +32,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Link from "next/link";
-import Image from "next/image";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { authClient } from "@/lib/auth-client";
-import { usePathname, useRouter } from "next/navigation";
-import { Avatar } from "@radix-ui/react-avatar";
-import { AvatarFallback } from "@/components/ui/avatar";
 
 const groupMenu = [
   {

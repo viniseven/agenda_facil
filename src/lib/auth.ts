@@ -1,9 +1,9 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { customSession } from "better-auth/plugins";
 
 import { PrismaClient } from "../../generated/prisma";
 import * as schema from "../../generated/prisma";
-import { customSession } from "better-auth/plugins";
 
 const prisma = new PrismaClient();
 

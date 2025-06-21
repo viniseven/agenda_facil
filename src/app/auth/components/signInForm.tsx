@@ -1,8 +1,11 @@
 "use client";
 
-import { z } from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -23,9 +26,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
-import { LoaderCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 const signInSchema = z.object({
   email: z.string().trim().min(1).email({ message: "E-mail inválido" }),
