@@ -20,7 +20,6 @@ const DoctorsPage = () => {
             Gerencie os médicos de sua clínica
           </PageHeaderDescription>
         </PageHeaderContent>
-
         <PageHeaderButtonActions>
           <Button>
             <Plus />
