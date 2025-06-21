@@ -1,10 +1,10 @@
 import { FlatCompat } from "@eslint/eslintrc";
-import simpleImportSort, { languages } from "eslint-plugin-simple-import-sort";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import importPlugin from "eslint-plugin-import";
 import { dirname } from "path";
+import { fileURLToPath } from "url";
 
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const compat = new FlatCompat({
@@ -12,13 +12,28 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: [
+      "**/node_modules/",
+      ".next/",
+      "dist/",
+      "build/",
+      "public/",
+      "generated/",
+      ".turbo/",
+    ],
+  },
+
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 
   {
-    files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx", "**/*.mjs"],
+    files: ["src/**/*.{js,jsx,ts,tsx,mjs}"],
+
     plugins: {
       "simple-import-sort": simpleImportSort,
+      import: importPlugin,
     },
+
     rules: {
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
@@ -27,9 +42,11 @@ const eslintConfig = [
       "import/no-duplicates": "error",
     },
 
-    languageOptions.parserOptions: {
-      sourceType: "module",
-      ecmaVersion: "latest",
+    languageOptions: {
+      parserOptions: {
+        sourceType: "module",
+        ecmaVersion: "latest",
+      },
     },
   },
 ];
