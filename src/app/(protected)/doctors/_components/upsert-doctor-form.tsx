@@ -3,11 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { NumericFormat } from "react-number-format";
 import z from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -31,7 +31,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { medicalSpecialties } from "../_constants";
+import { daysWeek } from "../_constants/day-week";
+import { medicalSpecialties } from "../_constants/specialty";
 
 const createDoctorSchema = z.object({
   name: z.string().trim().min(2, { message: "Nome é obrigatório" }),
@@ -93,19 +94,23 @@ export const UpsertDoctorForm = () => {
           />
           <FormField
             control={form.control}
-            name="name"
+            name="speciality"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Especialidade</FormLabel>
                 <Select>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione uma especialidade" />
+                  <SelectTrigger className="w-full hover:cursor-pointer">
+                    <SelectValue
+                      placeholder="Selecione uma especialidade"
+                      {...field}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {medicalSpecialties.map((speciality) => (
                       <SelectItem
                         key={speciality.value}
                         value={speciality.value}
+                        className="hover: cursor-pointer"
                       >
                         {speciality.label}
                       </SelectItem>
@@ -116,6 +121,93 @@ export const UpsertDoctorForm = () => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="appointmentPriceInCents"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Valor da consulta</FormLabel>
+                <FormControl>
+                  <NumericFormat
+                    value={field.value}
+                    onValueChange={(value) => {
+                      field.onChange(value.floatValue);
+                    }}
+                    allowLeadingZeros
+                    decimalSeparator=","
+                    thousandSeparator="."
+                    decimalScale={2}
+                    fixedDecimalScale
+                    customInput={Input}
+                    prefix="R$"
+                    placeholder="Insira o valor da consulta"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex justify-between gap-2">
+            <FormField
+              control={form.control}
+              name="availableFromWeekDay"
+              render={({ field }) => (
+                <FormItem className="w-full hover:cursor-pointer">
+                  <FormLabel>Dia inicial</FormLabel>
+                  <Select>
+                    <SelectTrigger className="w-full">
+                      <SelectValue
+                        placeholder="Selecione dia inicial"
+                        {...field}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {daysWeek.map((day) => (
+                        <SelectItem
+                          key={day.value}
+                          value={day.label}
+                          className="hover: cursor-pointer"
+                        >
+                          {day.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="availableToWeekDay"
+              render={({ field }) => (
+                <FormItem className="w-full hover:cursor-pointer">
+                  <FormLabel>Dia final</FormLabel>
+                  <Select>
+                    <SelectTrigger className="w-full hover:cursor-pointer">
+                      <SelectValue
+                        placeholder="Selecione dia final"
+                        {...field}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {daysWeek.map((day) => (
+                        <SelectItem
+                          key={day.value}
+                          value={day.label}
+                          className="hover: cursor-pointer"
+                        >
+                          {day.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <DialogFooter>
             <Button className="w-full" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? (
