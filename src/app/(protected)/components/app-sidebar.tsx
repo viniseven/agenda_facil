@@ -1,6 +1,5 @@
 "use client";
 
-import { Avatar } from "@radix-ui/react-avatar";
 import {
   CalendarDays,
   LayoutDashboard,
@@ -13,7 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-import { AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -96,7 +95,7 @@ const AppSidebar = () => {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    className="hover:text-primary focus:bg-blue-600"
+                    className="hover:text-primary"
                     isActive={pathname === item.url}
                   >
                     <Link href={item.url} className="py-5">
