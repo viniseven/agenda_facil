@@ -26,13 +26,20 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 
 import { daysWeek } from "../_constants/day-week";
 import { medicalSpecialties } from "../_constants/specialty";
+import {
+  availableTimeAfternoon,
+  availableTimeMorning,
+  availableTimeNight,
+} from "../_constants/time-day";
 
 const createDoctorSchema = z.object({
   name: z.string().trim().min(2, { message: "Nome é obrigatório" }),
@@ -43,8 +50,8 @@ const createDoctorSchema = z.object({
   appointmentPriceInCents: z
     .number()
     .min(1, { message: "Preço da consulta é obrigatório" }),
-  availableFromWeekDay: z.number(),
-  availableToWeekDay: z.number(),
+  availableFromWeekDay: z.string(),
+  availableToWeekDay: z.string(),
   availableFromTime: z
     .string()
     .min(1, { message: "Hora de início é obrigatória" }),
@@ -60,8 +67,8 @@ export const UpsertDoctorForm = () => {
       name: "",
       speciality: "",
       appointmentPriceInCents: 0,
-      availableFromWeekDay: 0,
-      availableToWeekDay: 0,
+      availableFromWeekDay: "0",
+      availableToWeekDay: "0",
       availableFromTime: "",
       availableToTime: "",
     },
@@ -147,13 +154,14 @@ export const UpsertDoctorForm = () => {
               </FormItem>
             )}
           />
+
           <div className="flex justify-between gap-2">
             <FormField
               control={form.control}
               name="availableFromWeekDay"
               render={({ field }) => (
                 <FormItem className="w-full hover:cursor-pointer">
-                  <FormLabel>Dia inicial</FormLabel>
+                  <FormLabel>Dia inicial de disponibilidade</FormLabel>
                   <Select>
                     <SelectTrigger className="w-full">
                       <SelectValue
@@ -182,7 +190,7 @@ export const UpsertDoctorForm = () => {
               name="availableToWeekDay"
               render={({ field }) => (
                 <FormItem className="w-full hover:cursor-pointer">
-                  <FormLabel>Dia final</FormLabel>
+                  <FormLabel>Dia final de disponibilidade</FormLabel>
                   <Select>
                     <SelectTrigger className="w-full hover:cursor-pointer">
                       <SelectValue
@@ -200,6 +208,121 @@ export const UpsertDoctorForm = () => {
                           {day.label}
                         </SelectItem>
                       ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="flex justify-between gap-2">
+            <FormField
+              control={form.control}
+              name="availableFromTime"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Horário de início</FormLabel>
+                  <Select>
+                    <SelectTrigger className="w-full hover:cursor-pointer">
+                      <SelectValue
+                        placeholder="Selecione horário de início"
+                        {...field}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Manhã</SelectLabel>
+                        {availableTimeMorning.map((available) => (
+                          <SelectItem
+                            key={available.value}
+                            value={available.value}
+                            className="hover: w-full cursor-pointer"
+                          >
+                            {available.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                      <SelectGroup>
+                        <SelectLabel>Tarde</SelectLabel>
+                        {availableTimeAfternoon.map((available) => (
+                          <SelectItem
+                            key={available.value}
+                            value={available.value}
+                            className="hover: w-full cursor-pointer"
+                          >
+                            {available.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                      <SelectGroup>
+                        <SelectLabel>Noite</SelectLabel>
+                        {availableTimeNight.map((available) => (
+                          <SelectItem
+                            key={available.value}
+                            value={available.value}
+                            className="hover: w-full cursor-pointer"
+                          >
+                            {available.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="availableToTime"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Horário de Término</FormLabel>
+                  <Select>
+                    <SelectTrigger className="w-full hover:cursor-pointer">
+                      <SelectValue
+                        placeholder="Selecione horário de término"
+                        {...field}
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Manhã</SelectLabel>
+                        {availableTimeMorning.map((available) => (
+                          <SelectItem
+                            key={available.value}
+                            value={available.value}
+                            className="hover: w-full cursor-pointer"
+                          >
+                            {available.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                      <SelectGroup>
+                        <SelectLabel>Tarde</SelectLabel>
+                        {availableTimeAfternoon.map((available) => (
+                          <SelectItem
+                            key={available.value}
+                            value={available.value}
+                            className="hover: w-full cursor-pointer"
+                          >
+                            {available.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                      <SelectGroup>
+                        <SelectLabel>Noite</SelectLabel>
+                        {availableTimeNight.map((available) => (
+                          <SelectItem
+                            key={available.value}
+                            value={available.value}
+                            className="hover: w-full cursor-pointer"
+                          >
+                            {available.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
                     </SelectContent>
                   </Select>
                   <FormMessage />
