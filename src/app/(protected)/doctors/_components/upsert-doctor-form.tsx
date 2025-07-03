@@ -41,24 +41,34 @@ import {
   availableTimeNight,
 } from "../_constants/time-day";
 
-const createDoctorSchema = z.object({
-  name: z.string().trim().min(2, { message: "Nome é obrigatório" }),
-  speciality: z
-    .string()
-    .trim()
-    .min(2, { message: "Especialidade é obrigatório" }),
-  appointmentPriceInCents: z
-    .number()
-    .min(1, { message: "Preço da consulta é obrigatório" }),
-  availableFromWeekDay: z.string(),
-  availableToWeekDay: z.string(),
-  availableFromTime: z
-    .string()
-    .min(1, { message: "Hora de início é obrigatória" }),
-  availableToTime: z
-    .string()
-    .min(1, { message: "Hora de término é obrigatória" }),
-});
+const createDoctorSchema = z
+  .object({
+    name: z.string().trim().min(2, { message: "Nome é obrigatório" }),
+    speciality: z
+      .string()
+      .trim()
+      .min(2, { message: "Especialidade é obrigatório" }),
+    appointmentPriceInCents: z
+      .number()
+      .min(1, { message: "Preço da consulta é obrigatório" }),
+    availableFromWeekDay: z.string(),
+    availableToWeekDay: z.string(),
+    availableFromTime: z
+      .string()
+      .min(1, { message: "Hora de início é obrigatória" }),
+    availableToTime: z
+      .string()
+      .min(1, { message: "Hora de término é obrigatória" }),
+  })
+  .refine(
+    (data) => {
+      return data.availableFromTime < data.availableToTime;
+    },
+    {
+      message: "O Horário final não pode ser menor que o horário inicial",
+      path: ["availableToTime"],
+    },
+  );
 
 export const UpsertDoctorForm = () => {
   const form = useForm<z.infer<typeof createDoctorSchema>>({
