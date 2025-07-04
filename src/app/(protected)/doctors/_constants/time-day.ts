@@ -40,21 +40,21 @@ export enum AvailableTimeNight {
 
 const availableTimeMorning = Object.entries(AvailableTimeMorning).map(
   ([key, value]) => ({
-    value: AvailableTimeMorning[key as keyof typeof AvailableTimeMorning],
+    value: key,
     label: value,
   }),
 );
 
 const availableTimeAfternoon = Object.entries(AvailableTimeAfternoon).map(
   ([key, value]) => ({
-    value: AvailableTimeAfternoon[key as keyof typeof AvailableTimeAfternoon],
+    value: key,
     label: value,
   }),
 );
 
 const availableTimeNight = Object.entries(AvailableTimeNight).map(
   ([key, value]) => ({
-    value: AvailableTimeNight[key as keyof typeof AvailableTimeNight],
+    value: key,
     label: value,
   }),
 );
