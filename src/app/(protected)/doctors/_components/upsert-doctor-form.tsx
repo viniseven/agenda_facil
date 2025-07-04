@@ -44,28 +44,21 @@ import {
 const createDoctorSchema = z
   .object({
     name: z.string().trim().min(2, { message: "Nome é obrigatório" }),
-    speciality: z
-      .string()
-      .trim()
-      .min(2, { message: "Especialidade é obrigatório" }),
+    speciality: z.string().trim(),
     appointmentPriceInCents: z
       .number()
       .min(1, { message: "Preço da consulta é obrigatório" }),
     availableFromWeekDay: z.string(),
     availableToWeekDay: z.string(),
-    availableFromTime: z
-      .string()
-      .min(1, { message: "Hora de início é obrigatória" }),
-    availableToTime: z
-      .string()
-      .min(1, { message: "Hora de término é obrigatória" }),
+    availableFromTime: z.string(),
+    availableToTime: z.string(),
   })
   .refine(
     (data) => {
-      return data.availableFromTime < data.availableToTime;
+      return data.availableToTime > data.availableFromTime;
     },
     {
-      message: "O Horário final não pode ser menor que o horário inicial",
+      message: "Horário de término não pode ser anterior ao horário de início",
       path: ["availableToTime"],
     },
   );
@@ -115,12 +108,12 @@ export const UpsertDoctorForm = () => {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Especialidade</FormLabel>
-                <Select>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <SelectTrigger className="w-full hover:cursor-pointer">
-                    <SelectValue
-                      placeholder="Selecione uma especialidade"
-                      {...field}
-                    />
+                    <SelectValue placeholder="Selecione uma especialidade" />
                   </SelectTrigger>
                   <SelectContent>
                     {medicalSpecialties.map((speciality) => (
@@ -172,18 +165,15 @@ export const UpsertDoctorForm = () => {
               render={({ field }) => (
                 <FormItem className="w-full hover:cursor-pointer">
                   <FormLabel>Dia inicial de disponibilidade</FormLabel>
-                  <Select>
+                  <Select onValueChange={field.onChange}>
                     <SelectTrigger className="w-full">
-                      <SelectValue
-                        placeholder="Selecione dia inicial"
-                        {...field}
-                      />
+                      <SelectValue placeholder="Selecione dia inicial" />
                     </SelectTrigger>
                     <SelectContent>
                       {daysWeek.map((day) => (
                         <SelectItem
                           key={day.value}
-                          value={day.label}
+                          value={day.value}
                           className="hover: cursor-pointer"
                         >
                           {day.label}
@@ -201,18 +191,15 @@ export const UpsertDoctorForm = () => {
               render={({ field }) => (
                 <FormItem className="w-full hover:cursor-pointer">
                   <FormLabel>Dia final de disponibilidade</FormLabel>
-                  <Select>
+                  <Select onValueChange={field.onChange}>
                     <SelectTrigger className="w-full hover:cursor-pointer">
-                      <SelectValue
-                        placeholder="Selecione dia final"
-                        {...field}
-                      />
+                      <SelectValue placeholder="Selecione dia final" />
                     </SelectTrigger>
                     <SelectContent>
                       {daysWeek.map((day) => (
                         <SelectItem
                           key={day.value}
-                          value={day.label}
+                          value={day.value}
                           className="hover: cursor-pointer"
                         >
                           {day.label}
@@ -232,7 +219,7 @@ export const UpsertDoctorForm = () => {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>Horário de início</FormLabel>
-                  <Select>
+                  <Select onValueChange={field.onChange}>
                     <SelectTrigger className="w-full hover:cursor-pointer">
                       <SelectValue
                         placeholder="Selecione horário de início"
@@ -289,7 +276,7 @@ export const UpsertDoctorForm = () => {
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormLabel>Horário de Término</FormLabel>
-                  <Select>
+                  <Select onValueChange={field.onChange}>
                     <SelectTrigger className="w-full hover:cursor-pointer">
                       <SelectValue
                         placeholder="Selecione horário de término"
