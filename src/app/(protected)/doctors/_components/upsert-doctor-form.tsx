@@ -4,8 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
+import { toast } from "sonner";
 import z from "zod";
 
+import { upsertDoctor } from "@/actions/upsert-doctor";
 import { Button } from "@/components/ui/button";
 import {
   DialogContent,
@@ -32,6 +34,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { actionClient } from "@/lib/next-safe-action";
 
 import { daysWeek } from "../_constants/day-week";
 import { medicalSpecialties } from "../_constants/specialty";
@@ -48,8 +51,8 @@ const createDoctorSchema = z
     appointmentPriceInCents: z
       .number()
       .min(1, { message: "Preço da consulta é obrigatório" }),
-    availableFromWeekDay: z.string(),
-    availableToWeekDay: z.string(),
+    availableFromWeekDay: z.coerce.number(),
+    availableToWeekDay: z.coerce.number(),
     availableFromTime: z.string(),
     availableToTime: z.string(),
   })
@@ -70,16 +73,25 @@ export const UpsertDoctorForm = () => {
       name: "",
       speciality: "",
       appointmentPriceInCents: 0,
-      availableFromWeekDay: "0",
-      availableToWeekDay: "0",
+      availableFromWeekDay: 0,
+      availableToWeekDay: 0,
       availableFromTime: "",
       availableToTime: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof createDoctorSchema>) {
-    console.log(values);
-  }
+  const upsertDoctorAction = actionClient.action(upsertDoctor, {
+    onSucess: () => {
+      toast.success("Médico adicionado com sucesso");
+    },
+    onError: () => {
+      toast.error("Erro ao adicionar médico");
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof createDoctorSchema>) => {
+    upsertDoctorAction(values);
+  };
 
   return (
     <DialogContent>
@@ -172,7 +184,7 @@ export const UpsertDoctorForm = () => {
                     <SelectContent>
                       {daysWeek.map((day) => (
                         <SelectItem
-                          key={day.value}
+                          key={day.label}
                           value={day.value}
                           className="hover: cursor-pointer"
                         >
@@ -198,7 +210,7 @@ export const UpsertDoctorForm = () => {
                     <SelectContent>
                       {daysWeek.map((day) => (
                         <SelectItem
-                          key={day.value}
+                          key={day.label}
                           value={day.value}
                           className="hover: cursor-pointer"
                         >
@@ -345,3 +357,6 @@ export const UpsertDoctorForm = () => {
     </DialogContent>
   );
 };
+function useAction(upsertDoctor: unknown) {
+  throw new Error("Function not implemented.");
+}
