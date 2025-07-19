@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { toast } from "sonner";
@@ -34,7 +35,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { actionClient } from "@/lib/next-safe-action";
 
 import { daysWeek } from "../_constants/day-week";
 import { medicalSpecialties } from "../_constants/specialty";
@@ -47,6 +47,7 @@ import {
 const createDoctorSchema = z
   .object({
     name: z.string().trim().min(2, { message: "Nome é obrigatório" }),
+    avatarImgUrl: z.string(),
     speciality: z.string().trim(),
     appointmentPriceInCents: z
       .number()
@@ -71,6 +72,7 @@ export const UpsertDoctorForm = () => {
     resolver: zodResolver(createDoctorSchema),
     defaultValues: {
       name: "",
+      avatarImgUrl: "",
       speciality: "",
       appointmentPriceInCents: 0,
       availableFromWeekDay: 0,
@@ -80,8 +82,8 @@ export const UpsertDoctorForm = () => {
     },
   });
 
-  const upsertDoctorAction = actionClient.action(upsertDoctor, {
-    onSucess: () => {
+  const upsertDoctorAction = useAction(upsertDoctor, {
+    onSuccess: () => {
       toast.success("Médico adicionado com sucesso");
     },
     onError: () => {
@@ -90,7 +92,10 @@ export const UpsertDoctorForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof createDoctorSchema>) => {
-    upsertDoctorAction(values);
+    upsertDoctorAction.execute({
+      ...values,
+      appointmentPriceInCents: values.appointmentPriceInCents * 100,
+    });
   };
 
   return (
@@ -341,8 +346,8 @@ export const UpsertDoctorForm = () => {
           </div>
 
           <DialogFooter>
-            <Button className="w-full" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? (
+            <Button className="w-full" disabled={upsertDoctorAction.isPending}>
+              {upsertDoctorAction.isPending ? (
                 <>
                   Adicionando médico
                   <LoaderCircle className="h-4 w-4 animate-spin" />
@@ -357,6 +362,3 @@ export const UpsertDoctorForm = () => {
     </DialogContent>
   );
 };
-function useAction(upsertDoctor: unknown) {
-  throw new Error("Function not implemented.");
-}
