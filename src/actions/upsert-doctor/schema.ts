@@ -4,7 +4,7 @@ export const upsertDoctorSchema = z
   .object({
     id: z.string().uuid().optional(),
     name: z.string().trim().min(2, { message: "Nome é obrigatório" }),
-    speciality: z.string().trim().optional(),
+    speciality: z.string().trim(),
     avatarImgUrl: z.string().optional(),
     appointmentPriceInCents: z
       .number()
