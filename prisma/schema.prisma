@@ -51,12 +51,12 @@ model Doctors {
   id                      String         @id @default(uuid())
   name                    String
   avatarImgUrl            String         @map("avatar_img_url")
-  specialty               String
+  speciality               String
   appointmentPriceInCents Int            @map("appointment_price_in_cents")
   availableFromWeekDay    Int            @map("available_from_week_day")
   availableToWeekDay      Int            @map("available_to_week_day")
-  availableFromTime       DateTime       @map("available_from_time")
-  availableToTime         DateTime       @map("available_to_time")
+  availableFromTime       String       @map("available_from_time")
+  availableToTime         String       @map("available_to_time")
   clinicId                String         @map("clinic_id")
   createdAt               DateTime       @default(now()) @map("created_at")
   updatedAt               DateTime       @updatedAt @map("updated_at")
