@@ -35,6 +35,9 @@ export const upsertDoctor = actionClient
       },
       create: {
         ...parsedInput,
+        clinicId: session?.user.clinic?.id,
       },
     });
+
+    return { message: "Success" };
   });
