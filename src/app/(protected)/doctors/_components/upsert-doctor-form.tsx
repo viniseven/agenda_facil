@@ -66,8 +66,11 @@ const createDoctorSchema = z
       path: ["availableToTime"],
     },
   );
+interface UpsertDoctorFormProps {
+  onSuccess?: () => void;
+}
 
-export const UpsertDoctorForm = () => {
+export const UpsertDoctorForm = ({ onSuccess }: UpsertDoctorFormProps) => {
   const form = useForm<z.infer<typeof createDoctorSchema>>({
     resolver: zodResolver(createDoctorSchema),
     defaultValues: {
@@ -85,6 +88,7 @@ export const UpsertDoctorForm = () => {
   const upsertDoctorAction = useAction(upsertDoctor, {
     onSuccess: () => {
       toast.success("Médico adicionado com sucesso");
+      onSuccess?.();
     },
     onError: () => {
       toast.error("Erro ao adicionar médico");
